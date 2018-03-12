@@ -326,6 +326,7 @@ def crnn_fn(features, labels, mode, params):
 
             pred_chars = table_int2str.lookup(sparse_code_pred)
             predictions_dict['words'] = get_words_from_chars(pred_chars.values, sequence_lengths=sequence_lengths_pred)
+            predictions_dict['words']=tf.identity(predictions_dict['words'],name='output')
 
             tf.summary.text('predicted_words', predictions_dict['words'][:10])
 

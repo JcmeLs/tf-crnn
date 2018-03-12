@@ -39,5 +39,24 @@ See `train.py` for more details on the options.
 * `json`
 * `glob`
 
+### How to frozen a model（暂时）
+修改estimator.export_savedmodel的源码：找到export_model.py第50行，跳转到estimator.export_savedmodel方法，在
+``` python
+        builder = saved_model_builder.SavedModelBuilder(export_dir)
+        builder.add_meta_graph_and_variables(
+            session, [tag_constants.SERVING],
+            signature_def_map=signature_def_map,
+            assets_collection=ops.get_collection(
+                ops.GraphKeys.ASSET_FILEPATHS),
+            legacy_init_op=local_init_op)
+        builder.save(as_text)
+```
+之后加入
+``` python
+        output_graph_def = convert_variables_to_constants(session, session.graph_def, output_node_names=['deep_bidirectional_lstm/raw_prediction','code2str_conversion/output','init_all_tables'])
+        with tf.gfile.FastGFile('model/Model.pb', mode='wb') as f:
+            f.write(output_graph_def.SerializeToString())
+```
+
 
 

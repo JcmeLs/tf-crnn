@@ -108,13 +108,6 @@ def random_padding(image: tf.Tensor, max_pad_w: int=5, max_pad_h: int=10) -> tf.
 def augment_data(image: tf.Tensor) -> tf.Tensor:
     with tf.name_scope('DataAugmentation'):
 
-        # Random padding
-        image = random_padding(image)
-
-        image = tf.image.random_brightness(image, max_delta=0.1)
-        image = tf.image.random_contrast(image, 0.5, 1.5)
-        image = random_rotation(image, 0.05, crop=True)
-
         if image.shape[-1] >= 3:
             image = tf.image.random_hue(image, 0.2)
             image = tf.image.random_saturation(image, 0.5, 1.5)
